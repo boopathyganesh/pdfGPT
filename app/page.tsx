@@ -8,8 +8,9 @@ export default function HomePage() {
   const [uploaded, setUploaded] = useState(false);
   const [welcomeMessage, setWelcomeMessage] = useState('');
   return (
-    <main className="max-w-2xl flex items-center justify-center mx-auto p-6 h-full">
-      {/* <h1 className="text-2xl font-bold mb-4">Document Q&A</h1> */}
+    <main className="max-w-2xl flex flex-col items-center justify-center mx-auto p-6 h-full">
+      <h1 className="text-2xl font-bold mb-2">pdfGPT</h1>
+      <p className='text-lg mb-4'>Upload and ask anything from the document.</p>
       {!uploaded ? (
         <div className='h-full flex flex-col items-center justify-center'>
           <div className='flex flex-col items-center justify-center gap-2 mb-4'>

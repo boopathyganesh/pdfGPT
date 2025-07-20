@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useState } from 'react';
 
 export default function FileUpload({ onUpload }: { onUpload: (welcome: string) => void }) {
@@ -13,19 +14,22 @@ export default function FileUpload({ onUpload }: { onUpload: (welcome: string) =
         const formData = new FormData();
 
         files.forEach((file) => {
-            formData.append("files", file); 
+            formData.append("files", file);
         });
 
-        const res = await fetch("http://localhost:8000/upload", {
-            method: "POST",
-            body: formData,
-        });
+        // const res = await fetch("https://pdfgpt-server-fi7b.onrender.com/upload", {
+        //     method: "POST",
+        //     body: formData,
+        // });
 
-        const data = await res.json();
-        setLoading(false);
+        const res = await axios.post("http://localhost:8000/upload", formData)
+        console.log(res);
+        if (res.data) {
+            setLoading(false);
 
-        if (data.notice) {
-            onUpload("Hi! I'm ready to answer your questions based on the uploaded document(s). Ask me anything!");
+            if (res.data.notice) {
+                onUpload("Hi! I'm ready to answer your questions based on the uploaded document(s). Ask me anything!");
+            }
         }
     };
 
