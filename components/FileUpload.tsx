@@ -3,6 +3,8 @@
 import axios from 'axios';
 import { useState } from 'react';
 
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL
+
 export default function FileUpload({ onUpload }: { onUpload: (welcome: string) => void }) {
     const [files, setFiles] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
@@ -22,7 +24,7 @@ export default function FileUpload({ onUpload }: { onUpload: (welcome: string) =
         //     body: formData,
         // });
 
-        const res = await axios.post("http://localhost:8000/upload", formData)
+        const res = await axios.post(`http://${baseURL}/upload`, formData)
         console.log(res);
         if (res.data) {
             setLoading(false);

@@ -10,6 +10,8 @@ interface Message {
     content: string;
 }
 
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL
+
 export default function Chat({ initialMessages = [] }: { initialMessages?: Message[] }) {
     // const [messages, setMessages] = useState<Message[]>(initialMessages);
     const [input, setInput] = useState('');
@@ -33,7 +35,7 @@ export default function Chat({ initialMessages = [] }: { initialMessages?: Messa
 
 
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8000/ws/chat");
+        const ws = new WebSocket(`ws://${baseURL}/ws/chat`);
         setSocket(ws);
         ws.onopen = () => {
             console.log("✅ WebSocket connected");
@@ -174,11 +176,7 @@ export default function Chat({ initialMessages = [] }: { initialMessages?: Messa
         files.forEach((file) => formData.append("files", file));
 
         setLoading(true);
-        // const res = await fetch("https://pdfgpt-server-fi7b.onrender.com/upload", {
-        //     method: "POST",
-        //     body: formData,
-        // });
-        const res = await axios.post("http://localhost:8000/upload", formData)
+        const res = await axios.post(`http://${baseURL}/upload`, formData)
         if (res.data) {
             setLoading(false);
 
