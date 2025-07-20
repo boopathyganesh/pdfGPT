@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { FaPlus } from 'react-icons/fa6';
 import ReactMarkdown from "react-markdown";
 interface Message {
     role: 'user' | 'assistant';
@@ -85,6 +86,25 @@ export default function Chat({ initialMessages = [] }: { initialMessages?: Messa
 
     };
 
+    const handleUpload = async (files: File[]) => {
+        if (!files.length) return;
+
+        const formData = new FormData();
+        files.forEach((file) => formData.append("files", file));
+
+        setLoading(true);
+        const res = await fetch("http://localhost:8000/upload", {
+            method: "POST",
+            body: formData,
+        });
+        const data = await res.json();
+        setLoading(false);
+
+        if (data.notice) {
+            setMessages((prev) => [...prev, { role: "assistant", content: data.notice }]);
+        }
+    };
+
     return (
         <div className="flex flex-col gap-2 w-full">
             <div className="rounded p-4 h-[600px] overflow-y-auto mb-2">
@@ -104,8 +124,23 @@ export default function Chat({ initialMessages = [] }: { initialMessages?: Messa
                     e.preventDefault();
                     askQuestion();
                 }}
-                className="flex gap-2 bg-gray-500 py-3 px-4 rounded-2xl"
+                className="flex items-center gap-2 bg-gray-400/70 py-3 px-4 rounded-2xl"
             >
+                <button className=" bg-black h-8 w-8 flex items-center justify-center p-2 text-center rounded-full cursor-pointer text-white text-xl font-bold">
+                    <FaPlus className='' />
+                    <input
+                        type="file"
+                        multiple
+                        accept="application/pdf"
+                        onChange={(e) => {
+                            const selectedFiles = Array.from(e.target.files || []);
+                            if (selectedFiles.length > 0) {
+                                handleUpload(selectedFiles); // pass selected files
+                            }
+                        }}
+                        className="hidden"
+                    />
+                </button>
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
